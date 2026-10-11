@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+import RPi.GPIO as GPIO
+import time
+
+LED_ROJO = 18      # GPIO 18 (pin físico 12)
+LED_AMARILLO = 23  # GPIO 23 (pin físico 16)
+LED_VERDE = 24     # GPIO 24 (pin físico 18)
+
+LEDS = [LED_ROJO, LED_AMARILLO, LED_VERDE]
+
+try:
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+    for pin in LEDS:
+        GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
+
+    print("Semáforo iniciado (Modo BCM)")
+    print(f"Rojo: GPIO {LED_ROJO} | Amarillo: GPIO {LED_AMARILLO} | Verde: GPIO {LED_VERDE}")
+    print("Presiona Ctrl+C para salir")
+
+    while True:
+        # Rojo
+        GPIO.output(LED_ROJO, GPIO.HIGH)
+        print("ROJO - ALTO")
+        time.sleep(3)
+        GPIO.output(LED_ROJO, GPIO.LOW)
+
+        # Verde
+        GPIO.output(LED_VERDE, GPIO.HIGH)
+        print("VERDE - SIGUE")
+        time.sleep(3)
+        GPIO.output(LED_VERDE, GPIO.LOW)
+
+        # Amarillo
+        GPIO.output(LED_AMARILLO, GPIO.HIGH)
+        print("AMARILLO - PRECAUCION")
+        time.sleep(1)
+        GPIO.output(LED_AMARILLO, GPIO.LOW)
+
+except KeyboardInterrupt:
+    print("\nPrograma interrumpido por el usuario")
+
+finally:
+    GPIO.cleanup()
